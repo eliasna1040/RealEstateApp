@@ -25,8 +25,8 @@ public class PropertyListPageViewModel : BaseViewModel
         set => SetProperty(ref isRefreshing, value);
     }
 
-    //private Command getPropertiesCommand;
-    //public ICommand GetPropertiesCommand => getPropertiesCommand ??= new Command(async () => await GetPropertiesAsync());
+    private Command getPropertiesCommand;
+    public ICommand GetPropertiesCommand => getPropertiesCommand ??= new Command(async () => await GetPropertiesAsync());
 
     async Task GetPropertiesAsync()
     {
@@ -57,7 +57,11 @@ public class PropertyListPageViewModel : BaseViewModel
         }
     }
 
+    private Command _goToDetailsCommand;
 
+    public ICommand GoToDetailsCommand => _goToDetailsCommand ??=
+        new Command(async (property) => await GoToDetails((PropertyListItem)property)); 
+    
     async Task GoToDetails(PropertyListItem propertyListItem)
     {
         if (propertyListItem == null)
@@ -70,12 +74,11 @@ public class PropertyListPageViewModel : BaseViewModel
     }
 
     private Command goToAddPropertyCommand;
-    public ICommand GoToAddPropertyCommand => goToAddPropertyCommand ??= new Command(async () => await GotoAddProperty());
-    async Task GotoAddProperty()
+    public ICommand GoToAddPropertyCommand => goToAddPropertyCommand ??= new Command(async () =>
     {
         await Shell.Current.GoToAsync($"{nameof(AddEditPropertyPage)}?mode=newproperty", true, new Dictionary<string, object>
         {
             {"MyProperty", new Property() }
         });
-    }
+    });
 }
