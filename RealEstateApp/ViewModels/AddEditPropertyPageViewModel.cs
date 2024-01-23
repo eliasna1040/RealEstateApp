@@ -15,7 +15,10 @@ public class AddEditPropertyPageViewModel : BaseViewModel
     {
         this.service = service;
         Agents = new ObservableCollection<Agent>(service.GetAgents());
-        Connectivity.ConnectivityChanged += (sender, args) => ((Command)SetLocationByAddress).ChangeCanExecute();
+        if (DeviceInfo.VersionString != "14")
+        {
+            Connectivity.ConnectivityChanged += (sender, args) => ((Command)SetLocationByAddress).ChangeCanExecute();
+        }
     }
 
     public string Mode { get; set; }
@@ -82,6 +85,7 @@ public class AddEditPropertyPageViewModel : BaseViewModel
     {
         if (IsValid() == false)
         {
+            Vibration.Vibrate(TimeSpan.FromSeconds(3));
             StatusMessage = "Please fill in all required fields";
             StatusColor = Colors.Red;
         }
@@ -102,12 +106,14 @@ public class AddEditPropertyPageViewModel : BaseViewModel
         return true;
     }
 
-    public bool CanExecuteCommand { get; set; }
-
     private Command cancelSaveCommand;
 
     public ICommand CancelSaveCommand =>
-        cancelSaveCommand ??= new Command(async () => await Shell.Current.GoToAsync(".."));
+        cancelSaveCommand ??= new Command(async () =>
+        {
+            Vibration.Cancel();
+            await Shell.Current.GoToAsync("..");
+        });
 
     private Command _getCurrentLocationCommand;
 
