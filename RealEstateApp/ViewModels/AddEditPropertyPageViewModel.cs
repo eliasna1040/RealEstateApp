@@ -15,6 +15,7 @@ public class AddEditPropertyPageViewModel : BaseViewModel
     {
         this.service = service;
         Agents = new ObservableCollection<Agent>(service.GetAgents());
+        Connectivity.ConnectivityChanged += (sender, args) => ((Command)SetLocationByAddress).ChangeCanExecute();
     }
 
     public string Mode { get; set; }
@@ -101,6 +102,8 @@ public class AddEditPropertyPageViewModel : BaseViewModel
         return true;
     }
 
+    public bool CanExecuteCommand { get; set; }
+
     private Command cancelSaveCommand;
 
     public ICommand CancelSaveCommand =>
@@ -115,7 +118,7 @@ public class AddEditPropertyPageViewModel : BaseViewModel
             Location location = await Geolocation.GetLastKnownLocationAsync();
             Property.Latitude = location?.Latitude;
             Property.Longitude = location?.Longitude;
-            
+
             if (location != null)
             {
                 Property.Address = (await Geocoding.GetPlacemarksAsync(location)).Select(x =>
@@ -133,22 +136,24 @@ public class AddEditPropertyPageViewModel : BaseViewModel
     private Command _setLocationByAddress;
 
     public ICommand SetLocationByAddress => _setLocationByAddress ??= new Command(async () =>
-    {
-        try
         {
-            if (string.IsNullOrWhiteSpace(Property.Address))
+            try
             {
-                await Shell.Current.DisplayAlert("Hey", "Pls enter an address", "Ok");
-                return;
+                if (string.IsNullOrWhiteSpace(Property.Address))
+                {
+                    await Shell.Current.DisplayAlert("Hey", "Pls enter an address", "Ok");
+                    return;
+                }
+
+                Location location = (await Geocoding.GetLocationsAsync(Property.Address)).First();
+                Property.Longitude = location.Longitude;
+                Property.Latitude = location.Latitude;
             }
-            
-            Location location = (await Geocoding.GetLocationsAsync(Property.Address)).First();
-            Property.Longitude = location.Longitude;
-            Property.Latitude = location.Latitude;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-    });
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        },
+        () => Connectivity.Current.NetworkAccess == NetworkAccess.Internet &&
+              Connectivity.ConnectionProfiles.Contains(ConnectionProfile.WiFi));
 }
