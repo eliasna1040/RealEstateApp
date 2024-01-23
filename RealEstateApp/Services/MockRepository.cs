@@ -42,6 +42,15 @@ namespace RealEstateApp.Repositories
             {
                 new Property
                 {
+                    Id = "property_4", Address = "28 Jenkins St, Collaroy NSW 2097 Australia",
+                    Description =
+                        "Located in one of the most sought after streets in the area, this charming house has a lot going for it.",
+                    Beds = 3, Baths = 1, Parking = 3, LandSize = 450, Price = 480000, AgentId = "agent_1",
+                    ImageUrls = GetPropertyImageUrls(4),
+                    Latitude = -33.729635, Longitude = 151.298172
+                },
+                new Property
+                {
                     Id = "property_1", Address = "28 Anzac Ave, Collaroy NSW 2097 Australia",
                     Description =
                         "This lovely house has 180 degree ocean views and features state of the art appliances.",
@@ -65,15 +74,6 @@ namespace RealEstateApp.Repositories
                     Beds = 2, Baths = 2, Parking = 1, LandSize = 300, Price = 825000, AgentId = "agent_2",
                     ImageUrls = GetPropertyImageUrls(3),
                     Latitude = -33.737574, Longitude = 151.300586
-                },
-                new Property
-                {
-                    Id = "property_4", Address = "28 Jenkins St, Collaroy NSW 2097 Australia",
-                    Description =
-                        "Located in one of the most sought after streets in the area, this charming house has a lot going for it.",
-                    Beds = 3, Baths = 1, Parking = 3, LandSize = 450, Price = 480000, AgentId = "agent_1",
-                    ImageUrls = GetPropertyImageUrls(4),
-                    Latitude = -33.729635, Longitude = 151.298172
                 },
                 new Property
                 {

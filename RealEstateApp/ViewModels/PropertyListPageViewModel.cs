@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 
 namespace RealEstateApp.ViewModels;
+
 public class PropertyListPageViewModel : BaseViewModel
 {
     public ObservableCollection<PropertyListItem> PropertiesCollection { get; } = new();
@@ -19,14 +20,19 @@ public class PropertyListPageViewModel : BaseViewModel
     }
 
     bool isRefreshing;
+
     public bool IsRefreshing
     {
         get => isRefreshing;
         set => SetProperty(ref isRefreshing, value);
     }
 
+    private bool sortByDistance = false;
+
     private Command getPropertiesCommand;
-    public ICommand GetPropertiesCommand => getPropertiesCommand ??= new Command(async () => await GetPropertiesAsync());
+
+    public ICommand GetPropertiesCommand =>
+        getPropertiesCommand ??= new Command(async () => await GetPropertiesAsync());
 
     async Task GetPropertiesAsync()
     {
@@ -38,12 +44,28 @@ public class PropertyListPageViewModel : BaseViewModel
 
             List<Property> properties = service.GetProperties();
 
+            Location currentLocation =
+                await Geolocation.Default.GetLastKnownLocationAsync() ?? await Geolocation.GetLocationAsync();
+
+
+            IEnumerable<PropertyListItem> propertyListItems = properties.Select(x => new PropertyListItem(x)
+            {
+                Distance = currentLocation.CalculateDistance(new Location(x.Latitude.Value, x.Longitude.Value),
+                    DistanceUnits.Kilometers)
+            });
+
+            if (sortByDistance)
+            {
+                propertyListItems = propertyListItems.OrderBy(x => x.Distance);
+            }
+
             if (PropertiesCollection.Count != 0)
                 PropertiesCollection.Clear();
-
-            foreach (Property property in properties)
-                PropertiesCollection.Add(new PropertyListItem(property));
-
+            
+            foreach (PropertyListItem item in propertyListItems)
+            {
+                PropertiesCollection.Add(item);
+            }
         }
         catch (Exception ex)
         {
@@ -60,8 +82,8 @@ public class PropertyListPageViewModel : BaseViewModel
     private Command _goToDetailsCommand;
 
     public ICommand GoToDetailsCommand => _goToDetailsCommand ??=
-        new Command(async (property) => await GoToDetails((PropertyListItem)property)); 
-    
+        new Command(async (property) => await GoToDetails((PropertyListItem)property));
+
     async Task GoToDetails(PropertyListItem propertyListItem)
     {
         if (propertyListItem == null)
@@ -69,16 +91,26 @@ public class PropertyListPageViewModel : BaseViewModel
 
         await Shell.Current.GoToAsync(nameof(PropertyDetailPage), true, new Dictionary<string, object>
         {
-            {"MyPropertyListItem", propertyListItem }
+            { "MyPropertyListItem", propertyListItem }
         });
     }
 
     private Command goToAddPropertyCommand;
+
     public ICommand GoToAddPropertyCommand => goToAddPropertyCommand ??= new Command(async () =>
     {
-        await Shell.Current.GoToAsync($"{nameof(AddEditPropertyPage)}?mode=newproperty", true, new Dictionary<string, object>
-        {
-            {"MyProperty", new Property() }
-        });
+        await Shell.Current.GoToAsync($"{nameof(AddEditPropertyPage)}?mode=newproperty", true,
+            new Dictionary<string, object>
+            {
+                { "MyProperty", new Property() }
+            });
+    });
+
+    private Command _sortPropertiesByDistance;
+
+    public ICommand SortPropertiesByDistance => _sortPropertiesByDistance ??= new Command(async () =>
+    {
+        sortByDistance = true;
+        await GetPropertiesAsync();
     });
 }

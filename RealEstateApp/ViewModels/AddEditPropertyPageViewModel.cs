@@ -20,9 +20,11 @@ public class AddEditPropertyPageViewModel : BaseViewModel
     public string Mode { get; set; }
 
     #region PROPERTIES
+
     public ObservableCollection<Agent> Agents { get; }
 
     private Property _property;
+
     public Property Property
     {
         get => _property;
@@ -39,6 +41,7 @@ public class AddEditPropertyPageViewModel : BaseViewModel
     }
 
     private Agent _selectedAgent;
+
     public Agent SelectedAgent
     {
         get => _selectedAgent;
@@ -53,6 +56,7 @@ public class AddEditPropertyPageViewModel : BaseViewModel
     }
 
     string statusMessage;
+
     public string StatusMessage
     {
         get { return statusMessage; }
@@ -60,21 +64,24 @@ public class AddEditPropertyPageViewModel : BaseViewModel
     }
 
     Color statusColor;
+
     public Color StatusColor
     {
         get { return statusColor; }
         set { SetProperty(ref statusColor, value); }
     }
+
     #endregion
 
 
     private Command savePropertyCommand;
     public ICommand SavePropertyCommand => savePropertyCommand ??= new Command(async () => await SaveProperty());
+
     private async Task SaveProperty()
     {
         if (IsValid() == false)
         {
-           StatusMessage = "Please fill in all required fields";
+            StatusMessage = "Please fill in all required fields";
             StatusColor = Colors.Red;
         }
         else
@@ -95,5 +102,53 @@ public class AddEditPropertyPageViewModel : BaseViewModel
     }
 
     private Command cancelSaveCommand;
-    public ICommand CancelSaveCommand => cancelSaveCommand ??= new Command(async () => await Shell.Current.GoToAsync(".."));
+
+    public ICommand CancelSaveCommand =>
+        cancelSaveCommand ??= new Command(async () => await Shell.Current.GoToAsync(".."));
+
+    private Command _getCurrentLocationCommand;
+
+    public ICommand GetCurrentLocationCommand => _getCurrentLocationCommand ??= new Command(async () =>
+    {
+        try
+        {
+            Location location = await Geolocation.GetLastKnownLocationAsync();
+            Property.Latitude = location?.Latitude;
+            Property.Longitude = location?.Longitude;
+            
+            if (location != null)
+            {
+                Property.Address = (await Geocoding.GetPlacemarksAsync(location)).Select(x =>
+                        $"{x.Thoroughfare} {x.FeatureName}, {x.Locality} {x.PostalCode}, {x.CountryName}")
+                    .First();
+            }
+        }
+        catch (PermissionException e)
+        {
+            await Shell.Current.DisplayAlert("Permissions needed", "Grant access to location to use this feature",
+                "Close");
+        }
+    });
+
+    private Command _setLocationByAddress;
+
+    public ICommand SetLocationByAddress => _setLocationByAddress ??= new Command(async () =>
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(Property.Address))
+            {
+                await Shell.Current.DisplayAlert("Hey", "Pls enter an address", "Ok");
+                return;
+            }
+            
+            Location location = (await Geocoding.GetLocationsAsync(Property.Address)).First();
+            Property.Longitude = location.Longitude;
+            Property.Latitude = location.Latitude;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    });
 }
