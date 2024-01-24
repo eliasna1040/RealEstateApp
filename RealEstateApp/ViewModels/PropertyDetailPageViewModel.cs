@@ -9,37 +9,84 @@ namespace RealEstateApp.ViewModels;
 public class PropertyDetailPageViewModel : BaseViewModel
 {
     private readonly IPropertyService service;
+
     public PropertyDetailPageViewModel(IPropertyService service)
     {
         this.service = service;
     }
 
     Property property;
-    public Property Property { get => property; set { SetProperty(ref property, value); } }
+
+    public Property Property
+    {
+        get => property;
+        set { SetProperty(ref property, value); }
+    }
 
 
     Agent agent;
-    public Agent Agent { get => agent; set { SetProperty(ref agent, value); } }
+
+    public Agent Agent
+    {
+        get => agent;
+        set { SetProperty(ref agent, value); }
+    }
 
 
     PropertyListItem propertyListItem;
+
     public PropertyListItem PropertyListItem
     {
         set
         {
             SetProperty(ref propertyListItem, value);
-           
+
             Property = propertyListItem.Property;
             Agent = service.GetAgents().FirstOrDefault(x => x.Id == Property.AgentId);
         }
     }
 
+    public bool TextoSpeechIsEnabled
+    {
+        get => _textoSpeechIsEnabled;
+        set
+        {
+            if (value == _textoSpeechIsEnabled) return;
+            SetProperty(ref _textoSpeechIsEnabled, value);
+        }
+    }
+
     private Command editPropertyCommand;
+
     public ICommand EditPropertyCommand => editPropertyCommand ??= new Command(async () =>
     {
-        await Shell.Current.GoToAsync($"{nameof(AddEditPropertyPage)}?mode=editproperty", true, new Dictionary<string, object>
-        {
-            {"MyProperty", property }
-        });
+        await Shell.Current.GoToAsync($"{nameof(AddEditPropertyPage)}?mode=editproperty", true,
+            new Dictionary<string, object>
+            {
+                { "MyProperty", property }
+            });
+    });
+
+    private CancellationTokenSource cts;
+
+    private Command _playTextToSpeech;
+
+    public ICommand PlayTextToSpeech => _playTextToSpeech ??= new Command(async () =>
+    {
+        cts = new CancellationTokenSource();
+        TextoSpeechIsEnabled = true;
+        await TextToSpeech.SpeakAsync(Property.Description, cts.Token);
+        TextoSpeechIsEnabled = false;
+    });
+
+    private Command _stopTextToSpeech;
+    private bool _textoSpeechIsEnabled;
+
+    public ICommand StopTextToSpeech => _stopTextToSpeech ??= new Command(async () =>
+    {
+        if (cts.IsCancellationRequested)
+            return;
+        await cts.CancelAsync();
+        TextoSpeechIsEnabled = false;
     });
 }
