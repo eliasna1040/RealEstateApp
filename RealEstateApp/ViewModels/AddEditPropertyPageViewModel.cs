@@ -15,10 +15,33 @@ public class AddEditPropertyPageViewModel : BaseViewModel
     {
         this.service = service;
         Agents = new ObservableCollection<Agent>(service.GetAgents());
-        if (DeviceInfo.VersionString != "14")
+        if (DeviceInfo.VersionString == "14") return;
+
+        Connectivity.ConnectivityChanged += (sender, args) => ((Command)SetLocationByAddress).ChangeCanExecute();
+        Battery.BatteryInfoChanged += (sender, args) =>
         {
-            Connectivity.ConnectivityChanged += (sender, args) => ((Command)SetLocationByAddress).ChangeCanExecute();
-        }
+            double chargeLevel = args.ChargeLevel * 100;
+            if (chargeLevel <= 20)
+            {
+                if (Battery.EnergySaverStatus == EnergySaverStatus.On)
+                {
+                    StatusColor = Colors.Green;
+                }
+                else if (args.State == BatteryState.Charging)
+                {
+                    StatusColor = Colors.Yellow;
+                }
+                else
+                {
+                    StatusColor = Colors.Red;
+                }
+
+                StatusMessage = $"Battery is at {chargeLevel}%";
+                return;
+            }
+
+            StatusMessage = string.Empty;
+        };
     }
 
     public string Mode { get; set; }
@@ -74,6 +97,19 @@ public class AddEditPropertyPageViewModel : BaseViewModel
         get { return statusColor; }
         set { SetProperty(ref statusColor, value); }
     }
+
+    private bool _isFlashligtEnabled;
+    public bool IsFlashligtEnabled
+    {
+        get => _isFlashligtEnabled;
+        set
+        {
+            SetProperty(ref _isFlashligtEnabled, value);
+            OnPropertyChanged(nameof(FlashlightColor));
+        }
+    }
+
+    public string FlashlightColor => IsFlashligtEnabled ? "White" : "Black";
 
     #endregion
 
@@ -162,4 +198,19 @@ public class AddEditPropertyPageViewModel : BaseViewModel
         },
         () => Connectivity.Current.NetworkAccess == NetworkAccess.Internet &&
               Connectivity.ConnectionProfiles.Contains(ConnectionProfile.WiFi));
+
+    private Command _toggleFlashlight;
+    public ICommand ToggleFlashlight => _toggleFlashlight ??= new Command(async () =>
+    {
+        if (!IsFlashligtEnabled)
+        {
+            await Flashlight.TurnOnAsync();
+            IsFlashligtEnabled = true;
+        }
+        else
+        {
+            await Flashlight.TurnOffAsync();
+            IsFlashligtEnabled = false;
+        }
+    });
 }

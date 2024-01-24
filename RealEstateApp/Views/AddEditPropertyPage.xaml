@@ -11,6 +11,11 @@
     x:DataType="vm:AddEditPropertyPageViewModel">
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding ToggleFlashlight}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="FA-solid" Glyph="{x:Static fa:IconFont.Lightbulb}" Color="{Binding FlashlightColor}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
         <ToolbarItem Command="{Binding CancelSaveCommand}" Text="Cancel" />
         <ToolbarItem Command="{Binding SavePropertyCommand}" Text="Save" />
     </ContentPage.ToolbarItems>
