@@ -2,6 +2,7 @@
 using RealEstateApp.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using RealEstateApp.Views;
 
 namespace RealEstateApp.ViewModels;
 
@@ -57,7 +58,7 @@ public class AddEditPropertyPageViewModel : BaseViewModel
         get => _property;
         set
         {
-            SetProperty(ref _property, value);
+            SetField(ref _property, value);
             Title = Mode == "newproperty" ? "Add Property" : "Edit Property";
 
             if (_property.AgentId != null)
@@ -87,7 +88,7 @@ public class AddEditPropertyPageViewModel : BaseViewModel
     public string StatusMessage
     {
         get { return statusMessage; }
-        set { SetProperty(ref statusMessage, value); }
+        set { SetField(ref statusMessage, value); }
     }
 
     Color statusColor;
@@ -95,7 +96,7 @@ public class AddEditPropertyPageViewModel : BaseViewModel
     public Color StatusColor
     {
         get { return statusColor; }
-        set { SetProperty(ref statusColor, value); }
+        set { SetField(ref statusColor, value); }
     }
 
     private bool _isFlashligtEnabled;
@@ -104,7 +105,7 @@ public class AddEditPropertyPageViewModel : BaseViewModel
         get => _isFlashligtEnabled;
         set
         {
-            SetProperty(ref _isFlashligtEnabled, value);
+            SetField(ref _isFlashligtEnabled, value);
             OnPropertyChanged(nameof(FlashlightColor));
         }
     }
@@ -212,5 +213,16 @@ public class AddEditPropertyPageViewModel : BaseViewModel
             await Flashlight.TurnOffAsync();
             IsFlashligtEnabled = false;
         }
+    });
+    
+    private Command _goToCompassCommand;
+    public ICommand GoToCompassCommand => _goToCompassCommand ??= new Command(async () =>
+    {
+        await Shell.Current.GoToAsync(nameof(CompassPage), new ShellNavigationQueryParameters()
+        {
+            {
+                nameof(Models.Property), Property
+            }
+        });
     });
 }

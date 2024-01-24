@@ -18,6 +18,11 @@
         </ToolbarItem>
         <ToolbarItem Command="{Binding CancelSaveCommand}" Text="Cancel" />
         <ToolbarItem Command="{Binding SavePropertyCommand}" Text="Save" />
+        <ToolbarItem Command="{Binding GoToCompassCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="FA-solid" Glyph="{x:Static fa:IconFont.DraftingCompass}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
@@ -54,6 +59,15 @@
                         <Button Grid.Column="2" FontFamily="FA-solid" Text="{x:Static fa:IconFont.Thumbtack}" Command="{Binding GetCurrentLocationCommand}"/>
                         <Button Grid.Column="3" FontFamily="FA-solid" Text="{x:Static fa:IconFont.Home}" Command="{Binding SetLocationByAddress}"/>
                     </Grid>
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span FontFamily="FA-solid" Text="{x:Static fa:IconFont.DraftingCompass}"/>
+                                <Span Text=" Aspect"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Entry Text="{Binding Property.Aspect}"/>
                     <Label FontFamily="FA-solid" FontSize="Medium">
                         <Label.FormattedText>
                             <FormattedString>

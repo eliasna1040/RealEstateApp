@@ -8,17 +8,17 @@ public class BaseViewModel : INotifyPropertyChanged
     public bool IsBusy
     {
         get { return isBusy; }
-        set { SetProperty(ref isBusy, value); }
+        set { SetField(ref isBusy, value); }
     }
 
     string title = string.Empty;
     public string Title
     {
         get { return title; }
-        set { SetProperty(ref title, value); }
+        set { SetField(ref title, value); }
     }
 
-    protected bool SetProperty<T>(ref T backingStore, T value,
+    protected bool SetField<T>(ref T backingStore, T value,
                           [CallerMemberName] string propertyName = "", Action onChanged = null)
     {
         if (EqualityComparer<T>.Default.Equals(backingStore, value))

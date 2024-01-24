@@ -20,7 +20,7 @@ public class PropertyDetailPageViewModel : BaseViewModel
     public Property Property
     {
         get => property;
-        set { SetProperty(ref property, value); }
+        set { SetField(ref property, value); }
     }
 
 
@@ -29,7 +29,7 @@ public class PropertyDetailPageViewModel : BaseViewModel
     public Agent Agent
     {
         get => agent;
-        set { SetProperty(ref agent, value); }
+        set { SetField(ref agent, value); }
     }
 
 
@@ -39,7 +39,7 @@ public class PropertyDetailPageViewModel : BaseViewModel
     {
         set
         {
-            SetProperty(ref propertyListItem, value);
+            SetField(ref propertyListItem, value);
 
             Property = propertyListItem.Property;
             Agent = service.GetAgents().FirstOrDefault(x => x.Id == Property.AgentId);
@@ -52,7 +52,7 @@ public class PropertyDetailPageViewModel : BaseViewModel
         set
         {
             if (value == _textoSpeechIsEnabled) return;
-            SetProperty(ref _textoSpeechIsEnabled, value);
+            SetField(ref _textoSpeechIsEnabled, value);
         }
     }
 

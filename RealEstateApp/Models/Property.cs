@@ -8,6 +8,7 @@ namespace RealEstateApp.Models
         private double? _latitude = 0;
         private double? _longitude = 0;
         private string _address;
+        private string _aspect;
 
         public Property()
         {
@@ -46,5 +47,11 @@ namespace RealEstateApp.Models
         }
 
         public string MainImageUrl => ImageUrls?.FirstOrDefault() ?? GlobalSettings.Instance.NoImageUrl;
+
+        public string Aspect
+        {
+            get => _aspect;
+            set => SetField(ref _aspect, value);
+        }
     }
 }

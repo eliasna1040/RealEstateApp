@@ -24,7 +24,7 @@ public class PropertyListPageViewModel : BaseViewModel
     public bool IsRefreshing
     {
         get => isRefreshing;
-        set => SetProperty(ref isRefreshing, value);
+        set => SetField(ref isRefreshing, value);
     }
 
     private bool sortByDistance = false;

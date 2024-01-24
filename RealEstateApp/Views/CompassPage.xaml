@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RealEstateApp.Views.CompassPage"
+             Shell.PresentationMode="ModalAnimated"
+             xmlns:vm="clr-namespace:RealEstateApp.ViewModels"
+             xmlns:fa="clr-namespace:FontAwesome"
+             x:DataType="vm:CompassPageViewModel">
+    <Grid RowDefinitions="Auto,*,Auto" ColumnDefinitions="*" >
+
+        <Label FontSize="Large" FontFamily="FA-solid" Margin="0,20" HorizontalOptions="Center">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span FontFamily="FA-solid" Text="{x:Static fa:IconFont.ArrowUp}"/>
+                    <Span Text=" " />
+                    <Span Text="{Binding CurrentAspect}" />
+                    <Span Text=" Aspect" />
+                    <Span Text=" " />
+                    <Span FontFamily="FA-solid" Text="{x:Static fa:IconFont.ArrowUp}"/>
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
+
+        <Image Source="compassneedle.svg"
+               Rotation="{Binding Rotation}"
+               Scale="0.5"
+               Grid.Row="1" Grid.Column="0"
+               HorizontalOptions="Center"  />
+        
+        <Label Text="{Binding CurrentHeading, StringFormat='Heading {0:N2}'}"
+               Margin="0,20"
+               Grid.Row="2" Grid.Column="0"
+               HorizontalOptions="Center" />
+    </Grid>
+</ContentPage>
