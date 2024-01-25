@@ -28,16 +28,14 @@ public class HeightCalculatorPageViewModel : BaseViewModel
         set => SetField(ref _measurementLabel, value, nameof(MeasurementLabel), ((Command)SaveMeasurementCommand).ChangeCanExecute);
     }
 
-    private Command _watchBarometerCommand;
     private double _currentAltitude;
-    
-    public ICommand WatchBarometerCommand => _watchBarometerCommand ??= new Command(() =>
+    public void WatchBarometerCommand()
     {
         Barometer.Start(SensorSpeed.Game);
         Barometer.ReadingChanged += BarometerReadingChanged;
-    });
+    }
 
-    public void BarometerReadingChanged(object sender, BarometerChangedEventArgs eventArgs)
+    private void BarometerReadingChanged(object sender, BarometerChangedEventArgs eventArgs)
     {
         CurrentPressure = eventArgs.Reading.PressureInHectopascals;
 
@@ -46,8 +44,6 @@ public class HeightCalculatorPageViewModel : BaseViewModel
 
     private Command _saveMeasurementCommand;
     private string _measurementLabel;
-    private Command _stopWatchingBarometer;
-
     public ICommand SaveMeasurementCommand => _saveMeasurementCommand ??= new Command(() =>
     {
         BarometerMeasurement measurement = new BarometerMeasurement()
@@ -65,9 +61,9 @@ public class HeightCalculatorPageViewModel : BaseViewModel
         MeasurementCollection.Add(measurement);
     }, () => !string.IsNullOrWhiteSpace(_measurementLabel));
 
-    public ICommand StopWatchingBarometer => _stopWatchingBarometer ??= new Command(() =>
+    public void StopWatchingBarometer()
     {
         Barometer.ReadingChanged -= BarometerReadingChanged;
         Barometer.Stop();
-    });
+    }
 }

@@ -89,4 +89,16 @@ public class PropertyDetailPageViewModel : BaseViewModel
         await cts.CancelAsync();
         TextoSpeechIsEnabled = false;
     });
+
+    private Command _goToImageListPageCommand;
+
+    public ICommand GoToImageListPageCommand => _goToImageListPageCommand ??= new Command(async () =>
+    {
+        ShellNavigationQueryParameters param = new ShellNavigationQueryParameters()
+        {
+            { nameof(Models.Property), Property }
+        };
+
+        await Shell.Current.GoToAsync(nameof(ImageListPage), param);
+    });
 }

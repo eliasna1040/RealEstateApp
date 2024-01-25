@@ -7,24 +7,24 @@ using RealEstateApp.ViewModels;
 
 namespace RealEstateApp.Views;
 
-public partial class HeightCalculatorPage : ContentPage
+public partial class ImageListPage : ContentPage
 {
-    private HeightCalculatorPageViewModel _vm;
+    private ImageListPageViewModel _vm;
     
-    public HeightCalculatorPage(HeightCalculatorPageViewModel vm)
+    public ImageListPage(ImageListPageViewModel vm)
     {
         InitializeComponent();
-        BindingContext = vm;
         _vm = vm;
+        BindingContext = vm;
     }
 
     protected override void OnAppearing()
     {
-        _vm.WatchBarometerCommand();
+        _vm.WatchAccelerometer();
     }
 
     protected override void OnDisappearing()
     {
-        _vm.StopWatchingBarometer();
+        _vm.StopWatchingAccelerometer();
     }
 }

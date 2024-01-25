@@ -19,11 +19,11 @@ public partial class CompassPage : ContentPage
 
     protected override void OnAppearing()
     {
-        _vm.WatchCompassCommand.Execute(null);
+        _vm.WatchCompassCommand();
     }
 
     protected override void OnDisappearing()
     {
-        _vm.StopWatchingCompassCommand.Execute(null);
+        _vm.StopWatchingCompassCommand();
     }
 }

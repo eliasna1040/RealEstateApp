@@ -32,26 +32,24 @@ public class CompassPageViewModel : BaseViewModel
         set => SetField(ref _currentAspect, value);
     }
 
-    private Command _watchCompassCommand;
-    private Command _stopWatchingCompassCommand;
     private double _currentHeading;
     private double _rotation;
     private string _currentAspect;
 
-    public ICommand WatchCompassCommand => _watchCompassCommand ??= new Command(() =>
+    public void WatchCompassCommand()
     {
         Compass.Start(SensorSpeed.Game);
         Compass.ReadingChanged += CompassReadingChanged;
-    });
+    }
 
-    public ICommand StopWatchingCompassCommand => _stopWatchingCompassCommand ??= new Command(() =>
+    public void StopWatchingCompassCommand()
     {
         Compass.ReadingChanged -= CompassReadingChanged;
         Compass.Stop();
         Property.Aspect = CurrentAspect;
-    });
+    }
 
-    public void CompassReadingChanged(object sender, CompassChangedEventArgs eventArgs)
+    private void CompassReadingChanged(object sender, CompassChangedEventArgs eventArgs)
     {
         CurrentHeading = eventArgs.Reading.HeadingMagneticNorth;
         Rotation = -CurrentHeading;
