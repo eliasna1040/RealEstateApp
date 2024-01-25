@@ -9,6 +9,8 @@ namespace RealEstateApp.Models
         private double? _longitude = 0;
         private string _address;
         private string _aspect;
+        private Vendor _vendor;
+        private string _neighbourhoodUrl;
 
         public Property()
         {
@@ -52,6 +54,18 @@ namespace RealEstateApp.Models
         {
             get => _aspect;
             set => SetField(ref _aspect, value);
+        }
+        
+        public Vendor Vendor
+        {
+            get => _vendor;
+            set => SetField(ref _vendor, value);
+        }
+        
+        public string NeighbourhoodUrl
+        {
+            get => _neighbourhoodUrl;
+            set => SetField(ref _neighbourhoodUrl, value);
         }
     }
 }

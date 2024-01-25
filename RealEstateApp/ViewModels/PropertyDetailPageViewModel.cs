@@ -91,6 +91,7 @@ public class PropertyDetailPageViewModel : BaseViewModel
     });
 
     private Command _goToImageListPageCommand;
+    private string _neighbourhoodUrl;
 
     public ICommand GoToImageListPageCommand => _goToImageListPageCommand ??= new Command(async () =>
     {
@@ -100,5 +101,42 @@ public class PropertyDetailPageViewModel : BaseViewModel
         };
 
         await Shell.Current.GoToAsync(nameof(ImageListPage), param);
+    });
+
+    private Command _openPhoneActionSheetCommand;
+
+    public ICommand OpenPhoneActionSheetCommand => _openPhoneActionSheetCommand ??= new Command(async () =>
+    {
+        string choice = await Shell.Current.DisplayActionSheet(Property.Vendor.Phone, "Cancel", null, "Call", "SMS");
+
+        switch (choice)
+        {
+            case "Call":
+                PhoneDialer.Default.Open(Property.Vendor.Phone);
+                break;
+            case "SMS":
+                await Sms.Default.ComposeAsync(new SmsMessage()
+                {
+                    Recipients = [Property.Vendor.Phone],
+                    Body = $"Hello, {Property.Vendor.FirstName}, about {Property.Address}"
+                });
+                break;
+        }
+    });
+
+    private Command _openEmailCommand;
+
+    public ICommand OpenEmailCommand => _openEmailCommand ??= new Command(() =>
+    {
+        var attachmentFilePath = Path.Combine(FileSystem.AppDataDirectory, "property.txt");
+        File.WriteAllText(attachmentFilePath, $"{Property.Address}");
+        
+        Email.Default.ComposeAsync(new EmailMessage()
+        {
+            Body = $"Hello, {Property.Vendor.FirstName}, about {Property.Address}",
+            Attachments = [new EmailAttachment(attachmentFilePath)],
+            To = [Property.Vendor.Email],
+            Subject = Property.Address,
+        });
     });
 }

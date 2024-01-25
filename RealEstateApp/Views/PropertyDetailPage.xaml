@@ -17,7 +17,7 @@
     <ScrollView>
         <Grid
             Padding="15"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
             RowSpacing="10">
             <Image
                 Grid.Row="0"
@@ -100,7 +100,39 @@
                 FontAttributes="Bold"
                 FontSize="14"
                 Text="Listed by:" />
-            <Grid Grid.Row="8" ColumnDefinitions="auto, *">
+            <VerticalStackLayout Grid.Row="8">
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span FontFamily="FA-solid" Text="{x:Static fa:IconFont.User}"/>
+                            <Span Text="{Binding Property.Vendor.FullName}"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span FontFamily="FA-solid" Text="{x:Static fa:IconFont.Envelope}"/>
+                            <Span TextDecorations="Underline" TextColor="Blue" Text="{Binding Property.Vendor.Email}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenEmailCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span FontFamily="FA-solid" Text="{x:Static fa:IconFont.Phone}"/>
+                            <Span TextDecorations="Underline" TextColor="Blue" Text="{Binding Property.Vendor.Phone}"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenPhoneActionSheetCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </VerticalStackLayout>
+            <Grid Grid.Row="9" ColumnDefinitions="auto, *">
                 <Image
                     Grid.Column="0"
                     Source="{Binding Agent.ImageUrl}"
