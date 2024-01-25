@@ -17,7 +17,7 @@
     <ScrollView>
         <Grid
             Padding="15"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
             RowSpacing="10">
             <Image
                 Grid.Row="0"
@@ -79,60 +79,68 @@
                 Grid.Row="4"
                 FontSize="14"
                 Text="{Binding Property.LandSize, StringFormat='Land size: {0} &#x33a1;'}" />
+            <HorizontalStackLayout Grid.Row="5">
+                <Button Command="{Binding OpenAddressInMapsCommand}" FontFamily="FA-solid"
+                        Text="{x:Static fa:IconFont.MapMarked}" />
+                <Button Command="{Binding OpenAddressInNavigationCommand}" FontFamily="FA-solid"
+                        Text="{x:Static fa:IconFont.Directions}" />
+            </HorizontalStackLayout>
             <Label
-                Grid.Row="5"
+                Grid.Row="6"
                 Margin="0,20,0,0"
                 FontAttributes="Bold"
                 FontSize="14"
                 Text="Description:" />
-            <VerticalStackLayout Grid.Row="6">
+            <VerticalStackLayout Grid.Row="7">
                 <Label
                     Margin="0,0,0,20"
                     FontSize="14"
                     Text="{Binding Property.Description}" />
                 <Button Command="{Binding PlayTextToSpeech}" FontFamily="FA-solid"
-                        Text="{x:Static fa:IconFont.Play}" IsVisible="{Binding TextoSpeechIsEnabled, Converter={converters:InverseBoolConverter}}" />
+                        Text="{x:Static fa:IconFont.Play}"
+                        IsVisible="{Binding TextoSpeechIsEnabled, Converter={converters:InverseBoolConverter}}" />
                 <Button Command="{Binding StopTextToSpeech}" FontFamily="FA-solid"
                         Text="{x:Static fa:IconFont.Stop}" IsVisible="{Binding TextoSpeechIsEnabled}" />
             </VerticalStackLayout>
-            <Label
-                Grid.Row="7"
-                FontAttributes="Bold"
-                FontSize="14"
-                Text="Listed by:" />
             <VerticalStackLayout Grid.Row="8">
+                <Label Text="Vendor:" />
                 <Label>
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span FontFamily="FA-solid" Text="{x:Static fa:IconFont.User}"/>
-                            <Span Text="{Binding Property.Vendor.FullName}"/>
+                            <Span FontFamily="FA-solid" Text="{x:Static fa:IconFont.User}" />
+                            <Span Text="{Binding Property.Vendor.FullName}" />
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
                 <Label>
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span FontFamily="FA-solid" Text="{x:Static fa:IconFont.Envelope}"/>
+                            <Span FontFamily="FA-solid" Text="{x:Static fa:IconFont.Envelope}" />
                             <Span TextDecorations="Underline" TextColor="Blue" Text="{Binding Property.Vendor.Email}" />
                         </FormattedString>
                     </Label.FormattedText>
                     <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding OpenEmailCommand}"/>
+                        <TapGestureRecognizer Command="{Binding OpenEmailCommand}" />
                     </Label.GestureRecognizers>
                 </Label>
                 <Label>
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span FontFamily="FA-solid" Text="{x:Static fa:IconFont.Phone}"/>
-                            <Span TextDecorations="Underline" TextColor="Blue" Text="{Binding Property.Vendor.Phone}"/>
+                            <Span FontFamily="FA-solid" Text="{x:Static fa:IconFont.Phone}" />
+                            <Span TextDecorations="Underline" TextColor="Blue" Text="{Binding Property.Vendor.Phone}" />
                         </FormattedString>
                     </Label.FormattedText>
                     <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding OpenPhoneActionSheetCommand}"/>
+                        <TapGestureRecognizer Command="{Binding OpenPhoneActionSheetCommand}" />
                     </Label.GestureRecognizers>
                 </Label>
             </VerticalStackLayout>
-            <Grid Grid.Row="9" ColumnDefinitions="auto, *">
+            <Label
+                Grid.Row="9"
+                FontAttributes="Bold"
+                FontSize="14"
+                Text="Listed by:" />
+            <Grid Grid.Row="10" ColumnDefinitions="auto, *">
                 <Image
                     Grid.Column="0"
                     Source="{Binding Agent.ImageUrl}"

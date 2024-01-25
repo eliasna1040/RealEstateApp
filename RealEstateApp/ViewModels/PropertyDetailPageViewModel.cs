@@ -139,4 +139,21 @@ public class PropertyDetailPageViewModel : BaseViewModel
             Subject = Property.Address,
         });
     });
+
+    private Command _openAddressInMapsCommand;
+
+    public ICommand OpenAddressInMapsCommand => _openAddressInMapsCommand ??= new Command(async () =>
+    {
+        await Map.Default.OpenAsync(new Location(Property.Latitude.Value, Property.Longitude.Value));
+    });
+
+    private Command _openAddressInNavigationCommand;
+
+    public ICommand OpenAddressInNavigationCommand => _openAddressInNavigationCommand ??= new Command(async () =>
+    {
+        await Map.Default.OpenAsync(new Location(Property.Latitude.Value, Property.Longitude.Value), new MapLaunchOptions()
+        {
+            NavigationMode = NavigationMode.Default
+        });
+    });
 }
