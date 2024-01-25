@@ -1,4 +1,5 @@
-﻿using RealEstateApp.Models;
+﻿using System.Text.Json;
+using RealEstateApp.Models;
 using RealEstateApp.Services;
 using RealEstateApp.Views;
 using System.Windows.Input;
@@ -130,7 +131,7 @@ public class PropertyDetailPageViewModel : BaseViewModel
     {
         var attachmentFilePath = Path.Combine(FileSystem.AppDataDirectory, "property.txt");
         File.WriteAllText(attachmentFilePath, $"{Property.Address}");
-        
+
         Email.Default.ComposeAsync(new EmailMessage()
         {
             Body = $"Hello, {Property.Vendor.FirstName}, about {Property.Address}",
@@ -151,10 +152,11 @@ public class PropertyDetailPageViewModel : BaseViewModel
 
     public ICommand OpenAddressInNavigationCommand => _openAddressInNavigationCommand ??= new Command(async () =>
     {
-        await Map.Default.OpenAsync(new Location(Property.Latitude.Value, Property.Longitude.Value), new MapLaunchOptions()
-        {
-            NavigationMode = NavigationMode.Default
-        });
+        await Map.Default.OpenAsync(new Location(Property.Latitude.Value, Property.Longitude.Value),
+            new MapLaunchOptions()
+            {
+                NavigationMode = NavigationMode.Default
+            });
     });
 
     private Command _openLinkInBrowserCommand;
@@ -163,10 +165,43 @@ public class PropertyDetailPageViewModel : BaseViewModel
     {
         Browser.Default.OpenAsync(Property.NeighbourhoodUrl, BrowserLaunchMode.SystemPreferred);
     });
-    
+
     private Command _openFileInBrowserCommand;
+
     public ICommand OpenFileInBrowserCommand => _openFileInBrowserCommand ??= new Command(() =>
     {
-        Launcher.Default.OpenAsync(new OpenFileRequest("this is a pdf", new ReadOnlyFile(Property.ContractFilePath)));
+        Launcher.Default.OpenAsync(
+            new OpenFileRequest("this is a pdf", new ReadOnlyFile(Property.ContractFilePath)));
+    });
+
+    private Command _shareInfoCommand;
+
+    public ICommand ShareInfoCommand => _shareInfoCommand ??= new Command(async () =>
+    {
+        await Share.RequestAsync(new ShareTextRequest()
+        {
+            Subject = "A property you may be interested in",
+            Text = $"Address: {Property.Address}, Price: {Property.Price}, Beds: {Property.Beds}",
+            Uri = Property.NeighbourhoodUrl,
+            Title = "Share Property"
+        });
+    });
+    
+    private Command _shareFileCommand;
+
+    public ICommand ShareFileCommand => _shareFileCommand ??= new Command(async () =>
+    {
+        await Share.RequestAsync(new ShareFileRequest()
+        {
+            File = new ShareFile(Property.ContractFilePath),
+            Title = "Share Property Contract"
+        });
+    });
+    
+    private Command _copyToClipboardCommand;
+
+    public ICommand CopyToClipboardCommand => _copyToClipboardCommand ??= new Command(async () =>
+    {
+        await Clipboard.SetTextAsync(JsonSerializer.Serialize(Property));
     });
 }

@@ -88,6 +88,12 @@
                         Text="{x:Static fa:IconFont.Link}" />
                 <Button Command="{Binding OpenFileInBrowserCommand}" FontFamily="FA-solid"
                         Text="{x:Static fa:IconFont.FileSignature}" />
+                <Button Command="{Binding ShareInfoCommand}" FontFamily="FA-solid"
+                        Text="{x:Static fa:IconFont.Share}" />
+                <Button Command="{Binding ShareFileCommand}" FontFamily="FA-solid"
+                        Text="{x:Static fa:IconFont.ShareSquare}" />
+                <Button Command="{Binding CopyToClipboardCommand}" FontFamily="FA-solid"
+                        Text="{x:Static fa:IconFont.Clipboard}" />
             </HorizontalStackLayout>
             <Label
                 Grid.Row="6"
