@@ -84,6 +84,10 @@
                         Text="{x:Static fa:IconFont.MapMarked}" />
                 <Button Command="{Binding OpenAddressInNavigationCommand}" FontFamily="FA-solid"
                         Text="{x:Static fa:IconFont.Directions}" />
+                <Button Command="{Binding OpenLinkInBrowserCommand}" FontFamily="FA-solid"
+                        Text="{x:Static fa:IconFont.Link}" />
+                <Button Command="{Binding OpenFileInBrowserCommand}" FontFamily="FA-solid"
+                        Text="{x:Static fa:IconFont.FileSignature}" />
             </HorizontalStackLayout>
             <Label
                 Grid.Row="6"

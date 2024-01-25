@@ -156,4 +156,17 @@ public class PropertyDetailPageViewModel : BaseViewModel
             NavigationMode = NavigationMode.Default
         });
     });
+
+    private Command _openLinkInBrowserCommand;
+
+    public ICommand OpenLinkInBrowserCommand => _openLinkInBrowserCommand ??= new Command(() =>
+    {
+        Browser.Default.OpenAsync(Property.NeighbourhoodUrl, BrowserLaunchMode.SystemPreferred);
+    });
+    
+    private Command _openFileInBrowserCommand;
+    public ICommand OpenFileInBrowserCommand => _openFileInBrowserCommand ??= new Command(() =>
+    {
+        Launcher.Default.OpenAsync(new OpenFileRequest("this is a pdf", new ReadOnlyFile(Property.ContractFilePath)));
+    });
 }

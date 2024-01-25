@@ -11,6 +11,7 @@ namespace RealEstateApp.Models
         private string _aspect;
         private Vendor _vendor;
         private string _neighbourhoodUrl;
+        private string _contractFilePath;
 
         public Property()
         {
@@ -66,6 +67,12 @@ namespace RealEstateApp.Models
         {
             get => _neighbourhoodUrl;
             set => SetField(ref _neighbourhoodUrl, value);
+        }
+
+        public string ContractFilePath
+        {
+            get => _contractFilePath;
+            set => SetField(ref _contractFilePath, value);
         }
     }
 }
