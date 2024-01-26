@@ -13,5 +13,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(CompassPage),typeof(CompassPage));
         Routing.RegisterRoute(nameof(ImageListPage), typeof(ImageListPage));
         Routing.RegisterRoute(nameof(BarcodeCameraPage), typeof(BarcodeCameraPage));
+        Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
     }
 }

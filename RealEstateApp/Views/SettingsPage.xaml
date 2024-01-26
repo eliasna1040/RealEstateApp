@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RealEstateApp.ViewModels"
+             x:Class="RealEstateApp.Views.SettingsPage"
+             x:DataType="vm:SettingsPageViewModel">
+    <ContentPage.Content>
+        <VerticalStackLayout Spacing="10">
+            <VerticalStackLayout>
+                <Label Text="{Binding Volume, StringFormat='Volume: {0:F2}'}" />
+                <Slider Value="{Binding Volume}" />
+            </VerticalStackLayout>
+            <VerticalStackLayout>
+                <Label Text="{Binding Pitch, StringFormat='Pitch: {0:F2}'}" />
+                <Slider Value="{Binding Pitch}" />
+            </VerticalStackLayout>
+            <Picker ItemsSource="{Binding Locales}" SelectedItem="{Binding Locale}" />
+            <Button Command="{Binding ResetSettingsCommand}" Text="Reset" />
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ContentPage>
