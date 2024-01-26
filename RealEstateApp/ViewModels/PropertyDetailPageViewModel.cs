@@ -161,16 +161,16 @@ public class PropertyDetailPageViewModel : BaseViewModel
 
     private Command _openLinkInBrowserCommand;
 
-    public ICommand OpenLinkInBrowserCommand => _openLinkInBrowserCommand ??= new Command(() =>
+    public ICommand OpenLinkInBrowserCommand => _openLinkInBrowserCommand ??= new Command(async () =>
     {
-        Browser.Default.OpenAsync(Property.NeighbourhoodUrl, BrowserLaunchMode.SystemPreferred);
+        await Browser.Default.OpenAsync(Property.NeighbourhoodUrl, BrowserLaunchMode.SystemPreferred);
     });
 
     private Command _openFileInBrowserCommand;
 
-    public ICommand OpenFileInBrowserCommand => _openFileInBrowserCommand ??= new Command(() =>
+    public ICommand OpenFileInBrowserCommand => _openFileInBrowserCommand ??= new Command(async () =>
     {
-        Launcher.Default.OpenAsync(
+        await Launcher.Default.OpenAsync(
             new OpenFileRequest("this is a pdf", new ReadOnlyFile(Property.ContractFilePath)));
     });
 
@@ -203,5 +203,12 @@ public class PropertyDetailPageViewModel : BaseViewModel
     public ICommand CopyToClipboardCommand => _copyToClipboardCommand ??= new Command(async () =>
     {
         await Clipboard.SetTextAsync(JsonSerializer.Serialize(Property));
+    });
+    
+    private Command _scanBarCodeCommand;
+
+    public ICommand ScanBarCodeCommand => _scanBarCodeCommand ??= new Command(async () =>
+    {
+        await Shell.Current.GoToAsync(nameof(BarcodeCameraPage));
     });
 }

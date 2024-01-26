@@ -7,9 +7,22 @@ namespace RealEstateApp.Repositories
     {
         public MockRepository()
         {
-            _contractFilePath = Path.Combine(FileSystem.Current.AppDataDirectory, "contract.pdf");
+            Task.Run(LoadFile).Wait();
             LoadProperties();
             LoadAgents();
+        }
+
+        private async Task LoadFile()
+        {
+            string filename = "contract.pdf";
+            using Stream inputStream = await FileSystem.Current.OpenAppPackageFileAsync(filename);
+
+            // Create an output filename
+            _contractFilePath = Path.Combine(FileSystem.Current.AppDataDirectory, filename);
+
+            // Copy the file to the AppDataDirectory
+            using FileStream outputStream = File.Create(_contractFilePath);
+            await inputStream.CopyToAsync(outputStream);
         }
 
         private List<Agent> _agents;

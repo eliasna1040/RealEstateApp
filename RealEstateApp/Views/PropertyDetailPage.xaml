@@ -7,6 +7,7 @@
     xmlns:fa="clr-namespace:FontAwesome"
     xmlns:vm="clr-namespace:RealEstateApp.ViewModels"
     xmlns:converters="clr-namespace:RealEstateApp.Converters"
+    xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
     Title="{Binding Property.Address}"
     x:DataType="vm:PropertyDetailPageViewModel">
 
@@ -79,22 +80,28 @@
                 Grid.Row="4"
                 FontSize="14"
                 Text="{Binding Property.LandSize, StringFormat='Land size: {0} &#x33a1;'}" />
-            <HorizontalStackLayout Grid.Row="5">
-                <Button Command="{Binding OpenAddressInMapsCommand}" FontFamily="FA-solid"
-                        Text="{x:Static fa:IconFont.MapMarked}" />
-                <Button Command="{Binding OpenAddressInNavigationCommand}" FontFamily="FA-solid"
-                        Text="{x:Static fa:IconFont.Directions}" />
-                <Button Command="{Binding OpenLinkInBrowserCommand}" FontFamily="FA-solid"
-                        Text="{x:Static fa:IconFont.Link}" />
-                <Button Command="{Binding OpenFileInBrowserCommand}" FontFamily="FA-solid"
-                        Text="{x:Static fa:IconFont.FileSignature}" />
-                <Button Command="{Binding ShareInfoCommand}" FontFamily="FA-solid"
-                        Text="{x:Static fa:IconFont.Share}" />
-                <Button Command="{Binding ShareFileCommand}" FontFamily="FA-solid"
-                        Text="{x:Static fa:IconFont.ShareSquare}" />
-                <Button Command="{Binding CopyToClipboardCommand}" FontFamily="FA-solid"
-                        Text="{x:Static fa:IconFont.Clipboard}" />
-            </HorizontalStackLayout>
+            <VerticalStackLayout Grid.Row="5" Spacing="5">
+                <HorizontalStackLayout Spacing="5">
+                    <Button Command="{Binding OpenAddressInMapsCommand}" FontFamily="FA-solid"
+                            Text="{x:Static fa:IconFont.MapMarked}" />
+                    <Button Command="{Binding OpenAddressInNavigationCommand}" FontFamily="FA-solid"
+                            Text="{x:Static fa:IconFont.Directions}" />
+                    <Button Command="{Binding OpenLinkInBrowserCommand}" FontFamily="FA-solid"
+                            Text="{x:Static fa:IconFont.Link}" />
+                    <Button Command="{Binding OpenFileInBrowserCommand}" FontFamily="FA-solid"
+                            Text="{x:Static fa:IconFont.FileSignature}" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="5">
+                    <Button Command="{Binding ShareInfoCommand}" FontFamily="FA-solid"
+                            Text="{x:Static fa:IconFont.Share}" />
+                    <Button Command="{Binding ShareFileCommand}" FontFamily="FA-solid"
+                            Text="{x:Static fa:IconFont.ShareSquare}" />
+                    <Button Command="{Binding CopyToClipboardCommand}" FontFamily="FA-solid"
+                            Text="{x:Static fa:IconFont.Clipboard}" />
+                    <Button Command="{Binding ScanBarCodeCommand}" FontFamily="FA-solid"
+                            Text="{x:Static fa:IconFont.Qrcode}" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
             <Label
                 Grid.Row="6"
                 Margin="0,20,0,0"
