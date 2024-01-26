@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RealEstateApp.ViewModels"
+             x:Class="RealEstateApp.Views.LoginPage"
+             x:DataType="vm:LoginPageViewModel">
+    <ContentPage.Content>
+        <VerticalStackLayout>
+            <Label Text="Username" />
+            <Entry Text="{Binding Username}" Placeholder="Enter username"/>
+            <Label Text="Password" />
+            <Entry Text="{Binding Password}" Placeholder="Enter password"/>
+            <Button Text="Login" Command="{Binding LoginCommand}"/>
+            <Button Text="Logout" Command="{Binding LogoutCommand}"/>
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ContentPage>
